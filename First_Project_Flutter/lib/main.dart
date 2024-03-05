@@ -54,12 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
             InkWell(
               child: Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: (isSmall) ? Icon(Icon.home) : Text('Home')),
+                  child: (isSmall) ? Icon(Icons.home) : Text('Home')),
             ),
             InkWell(
               child: Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: (isSmall) ? Icon(Icon.start) : Text('Favorites')),
+                  child: (isSmall) ? Icon(Icons.start) : Text('Favorites')),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => FavoriteScreen()));
