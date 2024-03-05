@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_app/ui.dart';
+import 'ui.dart';
 import 'data/bookshelper.dart';
 import 'main.dart';
 

@@ -28,7 +28,7 @@ class BookHelper {
 
   Future<List<dynamic>> getFavorites() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<dynamic> favBooks = List<dynamic>();
+    List<dyna mic> favBooks = List<dynamic>();
     Set allKeys = prefs.getKeys();
 
     if (allKeys.isNotEmpty){
@@ -58,7 +58,7 @@ class BookHelper {
     String id = preferences.getString(book.id);
     if (id != ''){
       await preferences.remove(book.id);
-      books.remove(book);
+     // books.remove(book);
       Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteScreen()));
     }
   }
