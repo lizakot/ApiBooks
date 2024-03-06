@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'data/bookshelper.dart';
-class BookTable extends StatelessWidget{
+
+
+
+class BooksTable extends StatelessWidget{
   final List<dynamic> books;
   final bool isFavorite;
   
   BooksTable (this.books, this.isFavorite);
-  final BookHelper helper = BookHelper();
+  final BooksHelper helper = BooksHelper();
   
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class BookTable extends StatelessWidget{
 }
 
   class BooksList extends StatelessWidget{
-    final list<dynamic> books;
+    final List<dynamic> books;
     final bool isFavorite;
     BooksList(this.books, this.isFavorite);
     final BooksHelper helper = BooksHelper();
@@ -82,3 +85,21 @@ class BookTable extends StatelessWidget{
         }));
     }
   }
+
+  class TableText extends StatelessWidget{
+  final String text;
+
+  TableText(this.text);
+
+  @override
+    Widget build(BuildContext  context){
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Text(text,
+      style: TextStyle(color: Theme
+          .of(context)
+          .primaryColorDark),),
+    );
+  }
+}
+

@@ -25,17 +25,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  BooksHelper helper;
-  List<dynamic> books = List<dynamic>();
-  int booksCount;
-  TextEditingController txtSearchController;
+  late BooksHelper helper;
+  List<dynamic> books = [];
+  int? booksCount;
+  late TextEditingController txtSearchController;
+
 
   @override
   void initState() {
-    helper = BooksHelper();
-    txtSearchController = TextEditingController();
-    initState();
     super.initState();
+    helper = BooksHelper();
+    books = [];
+    txtSearchController = TextEditingController();
+    initialize();
   }
 
   @override
@@ -105,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ])));
   }
 
-  Future initialize() async {
+  Future<void> initialize() async {
     books = await helper.getBooks('Flutter');
     setState(() {
       booksCount = books.length;

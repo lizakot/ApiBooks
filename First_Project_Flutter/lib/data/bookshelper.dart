@@ -7,34 +7,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../favoriteScreen.dart';
 import 'book.dart';
 
-class BookHelper {
+class BooksHelper {
   final String urlKey = '&key=[ADD YOUR KEY HERE]';
   final String urlQuery = 'volumes?q=';
   final String urlBase = 'https://www.googleapis.com/book/v1/';
 
   Future<List<dynamic>> getBooks(String query) async {
     final String url = urlBase + urlQuery + query;
-    Response result = await http.get(url);
+    Uri uri = Uri.parse(url);
+    Response result = await http.get(uri);
     if (result.statusCode == 200){
       final jsonResponse = json.decode(result.body);
-      final booksMap = jsonResponse['items'];
-      List<dynamic> books = books.map((i) => Book.fromJson(i)).toList();
+      final List<dynamic> booksMap = jsonResponse['items'];
+      List<Book> books = booksMap.map((i) => Book.fromJson(i)).toList();
       return books;
     }
     else {
-      return null;
+        return [];
     }
   }
 
   Future<List<dynamic>> getFavorites() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<dyna mic> favBooks = List<dynamic>();
-    Set allKeys = prefs.getKeys();
+    List<dynamic> favBooks = [];
+    Set<String> allKeys = prefs.getKeys().cast<String>();
 
     if (allKeys.isNotEmpty){
-      for (int i = 0; i < allKeys.length; i++){
-        String key = (allKeys.elementAt(i).toString());
-        String value = prefs.get(key);
+      for (String key in allKeys) {
+        String value = prefs.getString(key)!;
         dynamic json = jsonDecode(value);
         Book book = Book(
           json['id'], json['title'], json['authors'], json['description'],
@@ -45,17 +45,17 @@ class BookHelper {
     return favBooks;
   }
 
-  Future addToFavorites(Book book) async {
+  Future<void> addToFavorites(Book book) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String id = preferences.getString(book.id);
+    String? id = preferences.getString(book.id);
     if (id != ''){
-      await preferences.setString(book.id, json.encoder(book.toJson()));
+      await preferences.setString(book.id, json.encode(book.toJson()));
     }
   }
 
-  Future removeFromFavorites(Book book, BuildContext context) async {
+  Future<void> removeFromFavorites(Book book, BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String id = preferences.getString(book.id);
+    String? id = preferences.getString(book.id);
     if (id != ''){
       await preferences.remove(book.id);
      // books.remove(book);

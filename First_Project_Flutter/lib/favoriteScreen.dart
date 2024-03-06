@@ -9,9 +9,9 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  BooksHelper helper;
-  List<dynamic> books = List<dynamic>();
-  int booksCount;
+  late BooksHelper helper;
+  List<dynamic> books = [];
+  int booksCount = 0;
 
   @override
   Widget build(BuildContext context) {
