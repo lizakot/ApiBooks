@@ -15,9 +15,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
-      routes: {
-
-      },
+      routes: {},
     );
   }
 }
@@ -124,7 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget BooksList(List<dynamic> books, bool isFavorite) {
-
     return Container();
   }
 }

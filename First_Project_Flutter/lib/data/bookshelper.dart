@@ -34,44 +34,38 @@ class BooksHelper {
         String value = prefs.getString(key)!;
         dynamic json = jsonDecode(value);
 
-        // Проверяем, содержит ли JSON-ответ поле "work"
-        if (json.containsKey('work')) {
-          dynamic work = json['work'];
-
-          // Извлекаем данные книги из JSON-ответа
-          String id = work['key'] ?? '';
-          String title = work['title'] ?? '';
-          int firstPublishYear = work['first_publish_year'] ?? 0;
-
-          // Создаем экземпляр класса Book и добавляем его в список favBooks
-          Book book = Book(
-            id: id,
-            title: title,
-            firstPublishYear: firstPublishYear,
-          );
-          favBooks.add(book);
-        }
+        favBooks.add(Book(
+          id: json['id'],
+          title: json['title'],
+          firstPublishYear: json['firstPublishYear'],
+        ));
       }
     }
     return favBooks;
   }
 
+
   Future<void> addToFavorites(Book book) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? id = preferences.getString(book.id);
-    if (id != null && id.isNotEmpty) { // Проверяем, что id не равен null и не является пустой строкой
+    print('Adding book to favorites. Book id: ${book.id}, Stored id: $id');
+    if (id == null) {
       await preferences.setString(book.id, json.encode(book.toJson()));
     }
   }
 
+
+
   Future<void> removeFromFavorites(Book book, BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? id = preferences.getString(book.id);
+    print('Removing book with id: $id');
     if (id != null && id.isNotEmpty) { // Проверяем, что id не равен null и не является пустой строкой
       await preferences.remove(book.id);
       Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteScreen()));
     }
   }
+
 }
 
 

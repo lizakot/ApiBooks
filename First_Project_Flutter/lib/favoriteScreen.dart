@@ -14,6 +14,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   int booksCount = 0;
 
   @override
+  void initState() {
+    super.initState();
+    helper = BooksHelper();
+    initialize();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isSmall = MediaQuery.of(context).size.width < 700;
     return Scaffold(
@@ -55,13 +62,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    helper = BooksHelper();
-    initialize();
-  }
-
   Future<void> initialize() async {
     print('Initializing...');
     books = await helper.getFavorites();
@@ -88,3 +88,4 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 }
+

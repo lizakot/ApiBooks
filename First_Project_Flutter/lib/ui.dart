@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'data/bookshelper.dart';
 
-class BooksTable extends StatelessWidget {
+class BooksTable extends StatefulWidget {
   final List<dynamic> books;
   final bool isFavorite;
   final BooksHelper helper = BooksHelper();
@@ -9,13 +9,12 @@ class BooksTable extends StatelessWidget {
   BooksTable(this.books, this.isFavorite);
 
   @override
-  Widget build(BuildContext context) {
-    books.forEach((book) {
-      print('Book ID: ${book.id}');
-      print('Book Title: ${book.title}');
-      print('Book Publish Year: ${book.firstPublishYear}');
-    });
+  _BooksTableState createState() => _BooksTableState();
+}
 
+class _BooksTableState extends State<BooksTable> {
+  @override
+  Widget build(BuildContext context) {
     return Table(
       columnWidths: {
         0: FlexColumnWidth(1),
@@ -24,22 +23,26 @@ class BooksTable extends StatelessWidget {
         3: FlexColumnWidth(1),
       },
       border: TableBorder.all(color: Colors.blueGrey),
-      children: books.map((book) {
+      children: widget.books.map((book) {
         return TableRow(children: [
           TableCell(child: TableText(book.id)),
           TableCell(child: TableText(book.title)),
           TableCell(child: TableText(book.firstPublishYear.toString())),
           TableCell( // Убираем TableCell, связанный с loggedDate
             child: IconButton(
-              color: (isFavorite) ? Colors.red : Colors.amber,
-              tooltip: (isFavorite) ? 'Remove from favorites' : 'Add to favorites',
+              color: (widget.isFavorite) ? Colors.red : Colors.amber,
+              tooltip: (widget.isFavorite) ? 'Remove from favorites' : 'Add to favorites',
               icon: Icon(Icons.star),
               onPressed: () {
-                if (isFavorite) {
-                  helper.removeFromFavorites(book, context);
-                } else {
-                  helper.addToFavorites(book);
-                }
+                setState(() {
+                  if (widget.isFavorite) {
+                    widget.helper.removeFromFavorites(book, context);
+                  } else {
+                    widget.helper.addToFavorites(book);
+                  }
+                  // Обновляем список книг в зависимости от того, добавляем ли мы в избранное или удаляем из него
+                  widget.books.remove(book);
+                });
               },
             ),
           )
@@ -48,6 +51,7 @@ class BooksTable extends StatelessWidget {
     );
   }
 }
+
 
 class TableText extends StatelessWidget {
   final String text;
