@@ -15,48 +15,76 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isSmall = false;
-    if (MediaQuery.of(context).size.width < 700) {
-      isSmall = true;
-    }
+    bool isSmall = MediaQuery.of(context).size.width < 700;
     return Scaffold(
       appBar: AppBar(
         title: Text('Favorite Books'),
         actions: <Widget>[
           InkWell(
             child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: (isSmall) ? Icon(Icons.home) : Text('Home')),
+              padding: EdgeInsets.all(20.0),
+              child: (isSmall) ? Icon(Icons.home) : Text('Home'),
+            ),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
             },
           ),
           InkWell(
             child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: (isSmall) ? Icon(Icons.star) : Text('Favorite')),
+              padding: EdgeInsets.all(20.0),
+              child: (isSmall) ? Icon(Icons.star) : Text('Favorite'),
+            ),
           ),
         ],
       ),
       body: Column(
         children: <Widget>[
           Padding(
-              padding: EdgeInsets.all(20), child: Text('My Favorite Books')),
+            padding: EdgeInsets.all(20),
+            child: Text('My Favorite Books'),
+          ),
           Padding(
-              padding: EdgeInsets.all(20),
-              child:
-                  (isSmall) ? BooksList(books, true) : BooksTable(books, true)),
+            padding: EdgeInsets.all(20),
+            child: (isSmall) ? BooksList(books, true) : BooksTable(books, true),
+          ),
         ],
       ),
     );
   }
 
-  Future initialize() async {
+  @override
+  void initState() {
+    super.initState();
+    helper = BooksHelper();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    print('Initializing...');
     books = await helper.getFavorites();
+    print('Favorites received: $books');
     setState(() {
       booksCount = books.length;
-      books = books;
     });
+  }
+
+  Widget BooksList(List<dynamic> books, bool isFavorite) {
+    print('Building BooksList...');
+    if (books.isEmpty) {
+      return Text('No books found'); // Вывод сообщения, если список книг пуст
+    }
+    // код для отображения списка книг
+    return ListView.builder(
+      itemCount: books.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(books[index].title),
+          subtitle: Text(books[index].firstPublishYear.toString()), // Используем год первой публикации вместо loggedDate
+        );
+      },
+    );
   }
 }

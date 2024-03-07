@@ -15,6 +15,9 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
+      routes: {
+
+      },
     );
   }
 }
@@ -30,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int? booksCount;
   late TextEditingController txtSearchController;
 
-
   @override
   void initState() {
     super.initState();
@@ -42,79 +44,91 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isSmall = false;
-    if (MediaQuery
-        .of(context)
-        .size
-        .width < 600) {
-      isSmall = true;
-    }
+    bool isSmall = MediaQuery.of(context).size.width < 600;
     return Scaffold(
-        appBar: AppBar(
-          title: Text('My Books'),
-          actions: <Widget>[
-            InkWell(
-              child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: (isSmall) ? Icon(Icons.home) : Text('Home')),
+      appBar: AppBar(
+        title: Text('My Books'),
+        actions: <Widget>[
+          InkWell(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: (isSmall) ? Icon(Icons.home) : Text('Home'),
             ),
-            InkWell(
-              child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: (isSmall) ? Icon(Icons.start) : Text('Favorites')),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FavoriteScreen()));
-              },
+          ),
+          InkWell(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: (isSmall) ? Icon(Icons.star) : Text('Favorites'),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FavoriteScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Text('Search book'),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: 200,
+                    child: TextField(
+                      controller: txtSearchController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (text) {
+                        helper.getBooks(text).then((value) {
+                          setState(() {
+                            books = value;
+                          });
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () =>
+                          helper.getBooks(txtSearchController.text),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: (isSmall)
+                  ? BooksList(books, false)
+                  : BooksTable(books, false),
             ),
           ],
         ),
-        body: SingleChildScrollView(
-            child: Column(children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Row(children: [
-                  Text('Search book'),
-                  Container(
-                      padding: EdgeInsets.all(20),
-                      width: 200,
-                      child: TextField(
-                        controller: txtSearchController,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: (text) {
-                          helper.getBooks(text).then((value) {
-                            books = value;
-                            setState(() {
-                              books = books;
-                            });
-                          });
-                        },
-                      )),
-                  Container(
-                      padding: EdgeInsets.all(20),
-                      child: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () =>
-                              helper.getBooks(txtSearchController.text))),
-                ]),
-              ),
-              Padding(
-                  padding: EdgeInsets.all(20),
-                  child: (isSmall)
-                      ? BooksList(books, false)
-                      : BooksTable(books, false)),
-            ])));
+      ),
+    );
   }
 
   Future<void> initialize() async {
     books = await helper.getBooks('Flutter');
     setState(() {
       booksCount = books.length;
-      books = books;
     });
   }
+
+  Widget BooksList(List<dynamic> books, bool isFavorite) {
+
+    return Container();
   }
+}
+
 
 
 

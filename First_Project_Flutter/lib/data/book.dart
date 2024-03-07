@@ -3,37 +3,41 @@ import 'package:first_project_flutter/data/bookshelper.dart';
 class Book {
   String id;
   String title;
-  String authors;
-  String description;
-  String publisher;
+  int firstPublishYear;
 
-  Book(this.id, this.title, this.authors, this.description, this.publisher);
+  Book({
+    required this.id,
+    required this.title,
+    required this.firstPublishYear,
+  });
 
+  factory Book.fromJson(Map<String, dynamic> parsedJson) {
+    try {
+      final String id = parsedJson['key'] ?? '';
+      final String title = parsedJson['title'] ?? '';
+      final int firstPublishYear = parsedJson['first_publish_year'] ?? 0;
 
-  Map <String, dynamic> toJson(){
-    return{
+      return Book(
+        id: id,
+        title: title,
+        firstPublishYear: firstPublishYear,
+      );
+    } catch (e) {
+      print('Error parsing JSON data: $e');
+      return Book(
+        id: '',
+        title: '',
+        firstPublishYear: 0,
+      );
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
       'id': id,
       'title': title,
-      'authors': authors,
-      'description': description,
-      'publisher': publisher
+      'firstPublishYear': firstPublishYear,
     };
   }
-
-  factory Book.fromJson(Map<String, dynamic> parsedJson){
-    final String id = parsedJson['id'];
-    final String title = parsedJson['volumeInfo']['title'];
-    String authors = (parsedJson['volumeInfo']['authors'] == null)
-    ? ''
-    : parsedJson['volumeInfo']['authors'].toString();
-    authors = authors.replaceAll('[', '');
-    authors = authors.replaceAll(']', '');
-    final String description = (parsedJson['volumeInfo']['description'] == null)
-        ? ''
-        : parsedJson['volumeInfo']['description'];
-    final String publisher = (parsedJson['volumeInfo']['publisher'] == null)
-        ? ''
-        : parsedJson['volumeInfo']['publisher'];
-    return Book(id, title, authors, description, publisher,);
-  }
 }
+
